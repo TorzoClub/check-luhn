@@ -24,15 +24,15 @@ check(incorrect_card) // false
 
 # Performance
 
-**> 2,000,000** ops/sec in Windows 7 Intel Core i5-4460
+**> 3,400,000** ops/sec in Intel Core i5-4460 (Windows 7 Professinal 64bit, Node v8.11.3)
 
 ```
 C:\Users\vec\Desktop\check-luhn>npm run benchmark
 
-> check-luhn@0.2.0 benchmark C:\Users\vec\Desktop\check-luhn
+> check-luhn@0.2.5 benchmark C:\Users\vec\Desktop\check-luhn
 > node ./benchmark.js
 
-check-luhn#CorrectCard x 2,119,066 ops/sec ±0.17% (105 runs sampled)
-check-luhn#IncorrectCard x 2,149,912 ops/sec ±0.10% (109 runs sampled)
-Fastest is check-luhn#IncorrectCard
+check-luhn#CorrectCard x 3,515,237 ops/sec ±0.31% (92 runs sampled)
+check-luhn#IncorrectCard x 3,467,781 ops/sec ±0.16% (95 runs sampled)
+Fastest is check-luhn#CorrectCard
 ```
