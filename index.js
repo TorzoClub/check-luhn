@@ -8,20 +8,19 @@ const num2arr = str => {
   return arr
 }
 
-const allAdd = arr => {
-  let sum = 0
-  for (let i = 0; i < arr.length; i++) {
-    sum += parseInt(arr[i])
-  }
-  return sum
-}
+// 因为 evenBitSum 的关系，此時 num 肯定是 2 位的，也就是大于等于 10
+// 并且按位相加的关系，也就是说它的值范围会是 10 ~ 19 之间
+// 故可以采用下面 `1 + (num % 10)` 的优化策略
+const allAdd = num => 1 + (num % 10)
 
-const bitSum = num => (num < 10) ? num : allAdd(String(num))
+// 如果相乘后的值小於 10 的話，則直接返回值。否則要執行個位數和十位數的相加
+// `(num < 5)` 即 `((num * 2) < 10)`
+const evenBitSum = num => (num < 5) ? (num * 2) : allAdd(num * 2)
 
 const bitCompute = numArr => {
   let sum = 0
   for (let i = 0; i < numArr.length; i++) {
-    sum += (i % 2) ? numArr[i] : bitSum(numArr[i] * 2)
+    sum += (i % 2) ? numArr[i] : evenBitSum(numArr[i])
   }
   return sum
 }
