@@ -1,6 +1,6 @@
 const fast_toNumberArray = require('./fast_to_number_array')
 
-// 之所以不用 `arr.split('')` 这样的方式，还是考虑到速度的问题
+// 將數字字符串轉為數字數組
 const toNumberArray = str => {
   const arr = []
   for (let i = 0; i < str.length; i++) {
@@ -9,9 +9,9 @@ const toNumberArray = str => {
   return arr
 }
 
-// 因为 evenBitSum 的关系，此時 num 肯定是 2 位的，也就是大于等于 10
-// 并且按位相加的关系，也就是说它的值范围会是 10 ~ 19 之间
-// 故可以采用下面 `1 + (num % 10)` 的优化策略
+// 因為 evenBitSum 的關係，此時 num 肯定是 2 位的，也就是大於等於 10
+// 並且由於按位相加的關係，它的值範圍會是 10~ 19 之間
+// 故可採用下面 `1 + (num % 10)` 的優化策略
 const allAdd = num => 1 + (num % 10)
 
 // 如果相乘后的值小於 10 的話，則直接返回值。否則要執行個位數和十位數的相加
@@ -28,7 +28,7 @@ const bitCompute = numArr => {
 
 // 取出最後一位作爲校驗碼，剩下都反轉
 // 反轉的數組傳入後按位相加，偶數位都要 ｘ 2，奇數位直接參與相加
-// 相加後得到的总和 ＋ 校验码 能被 10 整除
+// 相加後得到的总和 ＋ 校驗碼，能被 10 整除
 const luhnCheck = num => {
   if (typeof(num) !== 'string') {
     throw TypeError('Expected string input')
