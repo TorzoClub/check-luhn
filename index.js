@@ -1,12 +1,25 @@
-const fast_toNumberArray = require('./fast_to_number_array')
+// fast_toNumberArray 比 toNumberArray 具有更快的執行效率
+// 但是內存有限只能緩存幾種常見長度的卡
+luhnCheck.fast_toNumberArray = require('./fast_to_number_array').init([16, 17, 19])
+const { fast_toNumberArray } = luhnCheck
+luhnCheck.fast_toNumberArray.clear()
 
-// 將數字字符串轉為數字數組
-const toNumberArray = str => {
+// 將數字字符串捨去最後一位后轉為數字數組（並且是數字字符串的反轉數組）
+const normalToNumberArray = num => {
+  // 沒有就正常操作
   const arr = []
-  for (let i = 0; i < str.length; i++) {
-    arr[i] = parseInt(str[i])
+  for (let i = num.length - 2; i >= 0; i--) {
+    arr.push(parseInt(num[i]))
   }
   return arr
+}
+
+function toNumberArray(num) {
+  if (fast_toNumberArray.hasOwnProperty(num.length)) {
+    return fast_toNumberArray[num.length](num)
+  } else {
+    return normalToNumberArray(num)
+  }
 }
 
 // 因為 evenBitSum 的關係，此時 num 肯定是 2 位的，也就是大於等於 10
@@ -18,6 +31,7 @@ const allAdd = num => 1 + (num % 10)
 // `(num < 5)` 即 `((num * 2) < 10)`
 const evenBitSum = num => (num < 5) ? (num * 2) : allAdd(num * 2)
 
+// 按位相加
 const bitCompute = numArr => {
   let sum = 0
   for (let i = 0; i < numArr.length; i++) {
@@ -29,20 +43,14 @@ const bitCompute = numArr => {
 // 取出最後一位作爲校驗碼，剩下都反轉
 // 反轉的數組傳入後按位相加，偶數位都要 ｘ 2，奇數位直接參與相加
 // 相加後得到的总和 ＋ 校驗碼，能被 10 整除
-const luhnCheck = num => {
+function luhnCheck(num) {
   if (typeof(num) !== 'string') {
     throw TypeError('Expected string input')
   }
 
-  if (fast_toNumberArray.hasOwnProperty(num.length)) {
-    // fast_toNumberArray 中如有相關加速函數，則調用它
-    num = fast_toNumberArray[num.length](num)
-  } else {
-    num = toNumberArray(num)
-  }
-
   return 0 === ((
-    num.pop() + bitCompute(num.reverse())
+    // num[num.length - 1] * 1 等效于 parseInt(num[num.length - 1])
+    bitCompute(toNumberArray(num)) + (num[num.length - 1] * 1)
   ) % 10)
 }
 
