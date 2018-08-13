@@ -1,10 +1,10 @@
 {
   "name": "check-luhn",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "bank card number luhn check",
   "main": "index.js",
   "scripts": {
-    "test": "ava ./test",
+    "test": "ava ./test --verbose",
     "test-watch": "ava ./test --watch",
     "benchmark": "node ./benchmark.js"
   },
@@ -20,6 +20,7 @@
   "license": "MIT",
   "devDependencies": {
     "ava": "^0.25.0",
-    "benchmark": "^2.1.4"
+    "benchmark": "^2.1.4",
+    "chalk": "^2.4.1"
   }
 }
