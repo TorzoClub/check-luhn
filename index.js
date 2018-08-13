@@ -1,6 +1,7 @@
-const fast_num2arr = require('./fast_map')
+const fast_toNumberArray = require('./fast_to_number_array')
 
-const num2arr = str => {
+// 之所以不用 `arr.split('')` 这样的方式，还是考虑到速度的问题
+const toNumberArray = str => {
   const arr = []
   for (let i = 0; i < str.length; i++) {
     arr[i] = parseInt(str[i])
@@ -33,11 +34,11 @@ const luhnCheck = num => {
     throw TypeError('Expected string input')
   }
 
-  if (fast_num2arr.hasOwnProperty(num.length)) {
-    // fast_map 中如有相關加速函數，則調用它
-    num = fast_num2arr[num.length](num)
+  if (fast_toNumberArray.hasOwnProperty(num.length)) {
+    // fast_toNumberArray 中如有相關加速函數，則調用它
+    num = fast_toNumberArray[num.length](num)
   } else {
-    num = num2arr(num)
+    num = toNumberArray(num)
   }
 
   return 0 === ((
