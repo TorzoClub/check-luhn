@@ -35,6 +35,7 @@ module.exports = class {
     })
     return this
   }
+  
   clear() {
     Object.keys(this).forEach(key => {
       delete this[key]

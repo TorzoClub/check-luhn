@@ -1,6 +1,19 @@
-// fast_toNumberArray 比 toNumberArray 具有更快的執行效率
-// 但是內存有限只能緩存幾種常見長度的卡
+// FastToNumberArray 比 toNumberArray 具有更快的執行效率
+// 但是內存有限只能緩存幾種常見長度
 const FastToNumberArray = require('./fast_to_number_array')
+// fast_toNumberArray 配置
+const fast_toNumberArray = new FastToNumberArray([16, 17, 18, 19, 20])
+luhnCheck.fast_toNumberArray = fast_toNumberArray
+
+// 用來識別 fast_toNumberArray 中是否存在加速函數，如果存在則調用它
+// 不存在則調用普通的 toNumberArray
+function toNumberArray(num) {
+  if (fast_toNumberArray.hasOwnProperty(num.length)) {
+    return fast_toNumberArray[num.length](num)
+  } else {
+    return normalToNumberArray(num)
+  }
+}
 
 // 將數字字符串捨去最後一位后轉為數字數組（並且是數字字符串的反轉數組）
 const normalToNumberArray = num => {
@@ -30,37 +43,18 @@ const bitCompute = numArr => {
   return sum
 }
 
-const funcFactory = (opt = {}) => {
-  const fast_toNumberArray = new FastToNumberArray(opt.fast_toNumberArray || [])
-
-  function toNumberArray(num) {
-    if (fast_toNumberArray.hasOwnProperty(num.length)) {
-      return fast_toNumberArray[num.length](num)
-    } else {
-      return normalToNumberArray(num)
-    }
+// 取出最後一位作爲校驗碼，剩下都反轉
+// 反轉的數組傳入後按位相加，偶數位都要 ｘ 2，奇數位直接參與相加
+// 相加後得到的总和 ＋ 校驗碼，能被 10 整除
+function luhnCheck(num) {
+  if (typeof(num) !== 'string') {
+    throw TypeError('Expected string input')
   }
 
-  return Object.assign(
-    // 取出最後一位作爲校驗碼，剩下都反轉
-    // 反轉的數組傳入後按位相加，偶數位都要 ｘ 2，奇數位直接參與相加
-    // 相加後得到的总和 ＋ 校驗碼，能被 10 整除
-    function luhnCheck(num) {
-      if (typeof(num) !== 'string') {
-        throw TypeError('Expected string input')
-      }
-
-      return 0 === ((
-        // num[num.length - 1] * 1 等效于 parseInt(num[num.length - 1])
-        bitCompute(toNumberArray(num)) + (num[num.length - 1] * 1)
-      ) % 10)
-    }, {
-      fast_toNumberArray,
-      factory: funcFactory,
-    }
-  )
+  return 0 === ((
+    // num[num.length - 1] * 1 等效于 parseInt(num[num.length - 1])
+    bitCompute(toNumberArray(num)) + (num[num.length - 1] * 1)
+  ) % 10)
 }
 
-module.exports = funcFactory({
-  fast_toNumberArray: [16, 17, 18, 19, 20]
-})
+module.exports = luhnCheck
