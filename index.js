@@ -1,3 +1,5 @@
+const fast_num2arr = require('./fast_map')
+
 const num2arr = str => {
   const arr = []
   for (let i = 0; i < str.length; i++) {
@@ -16,7 +18,7 @@ const allAdd = arr => {
 
 const bitSum = num => (num < 10) ? num : allAdd(String(num))
 
-const bitCompute = (numArr, cursor) => {
+const bitCompute = numArr => {
   let sum = 0
   for (let i = 0; i < numArr.length; i++) {
     sum += (i % 2) ? numArr[i] : bitSum(numArr[i] * 2)
@@ -30,12 +32,18 @@ const bitCompute = (numArr, cursor) => {
 const luhnCheck = num => {
   if (typeof(num) !== 'string') {
     throw TypeError('Expected string input')
+  }
+
+  if (fast_num2arr.hasOwnProperty(num.length)) {
+    // fast_map 中如有相關加速函數，則調用它
+    num = fast_num2arr[num.length](num)
   } else {
     num = num2arr(num)
-    return 0 === ((
-      num.pop() + bitCompute(num.reverse(), 0)
-    ) % 10)
   }
+
+  return 0 === ((
+    num.pop() + bitCompute(num.reverse())
+  ) % 10)
 }
 
 module.exports = luhnCheck
