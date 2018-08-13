@@ -1,12 +1,16 @@
 {
   "name": "check-luhn",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "bank card number luhn check",
   "main": "index.js",
   "scripts": {
     "test": "ava ./test",
     "test-watch": "ava ./test",
     "benchmark": "node ./benchmark.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TorzoClub/check-luhn.git"
   },
   "keywords": [
     "bank",
