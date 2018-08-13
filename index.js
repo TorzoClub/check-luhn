@@ -1,8 +1,6 @@
 // fast_toNumberArray 比 toNumberArray 具有更快的執行效率
 // 但是內存有限只能緩存幾種常見長度的卡
-luhnCheck.fast_toNumberArray = require('./fast_to_number_array').init([16, 17, 19])
-const { fast_toNumberArray } = luhnCheck
-luhnCheck.fast_toNumberArray.clear()
+const FastToNumberArray = require('./fast_to_number_array')
 
 // 將數字字符串捨去最後一位后轉為數字數組（並且是數字字符串的反轉數組）
 const normalToNumberArray = num => {
@@ -12,14 +10,6 @@ const normalToNumberArray = num => {
     arr.push(parseInt(num[i]))
   }
   return arr
-}
-
-function toNumberArray(num) {
-  if (fast_toNumberArray.hasOwnProperty(num.length)) {
-    return fast_toNumberArray[num.length](num)
-  } else {
-    return normalToNumberArray(num)
-  }
 }
 
 // 因為 evenBitSum 的關係，此時 num 肯定是 2 位的，也就是大於等於 10
@@ -40,18 +30,37 @@ const bitCompute = numArr => {
   return sum
 }
 
-// 取出最後一位作爲校驗碼，剩下都反轉
-// 反轉的數組傳入後按位相加，偶數位都要 ｘ 2，奇數位直接參與相加
-// 相加後得到的总和 ＋ 校驗碼，能被 10 整除
-function luhnCheck(num) {
-  if (typeof(num) !== 'string') {
-    throw TypeError('Expected string input')
+const funcFactory = (opt = {}) => {
+  const fast_toNumberArray = new FastToNumberArray(opt.fast_toNumberArray || [])
+
+  function toNumberArray(num) {
+    if (fast_toNumberArray.hasOwnProperty(num.length)) {
+      return fast_toNumberArray[num.length](num)
+    } else {
+      return normalToNumberArray(num)
+    }
   }
 
-  return 0 === ((
-    // num[num.length - 1] * 1 等效于 parseInt(num[num.length - 1])
-    bitCompute(toNumberArray(num)) + (num[num.length - 1] * 1)
-  ) % 10)
+  return Object.assign(
+    // 取出最後一位作爲校驗碼，剩下都反轉
+    // 反轉的數組傳入後按位相加，偶數位都要 ｘ 2，奇數位直接參與相加
+    // 相加後得到的总和 ＋ 校驗碼，能被 10 整除
+    function luhnCheck(num) {
+      if (typeof(num) !== 'string') {
+        throw TypeError('Expected string input')
+      }
+
+      return 0 === ((
+        // num[num.length - 1] * 1 等效于 parseInt(num[num.length - 1])
+        bitCompute(toNumberArray(num)) + (num[num.length - 1] * 1)
+      ) % 10)
+    }, {
+      fast_toNumberArray,
+      factory: funcFactory,
+    }
+  )
 }
 
-module.exports = luhnCheck
+module.exports = funcFactory({
+  fast_toNumberArray: [16, 17, 18, 19, 20]
+})

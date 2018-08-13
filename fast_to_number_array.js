@@ -18,8 +18,18 @@ const fastNum2ArrFnTemplate = strLength => {
 // 生成加速函數
 const fastNum2ArrGenerator = strLength => eval(fastNum2ArrFnTemplate(strLength))
 
-module.exports = new class {
+module.exports = class {
+  constructor(length_list) {
+    if (Array.isArray(length_list)) {
+      this.init(length_list)
+    }
+  }
+
   init(length_list) {
+    if (!Array.isArray(length_list)) {
+      throw TypeError('length_list is not Array')
+    }
+    this.clear()
     length_list.forEach(l => {
       this[l] = fastNum2ArrGenerator(l)
     })
@@ -29,7 +39,7 @@ module.exports = new class {
     Object.keys(this).forEach(key => {
       delete this[key]
     })
-    
+
     return this
   }
 }
