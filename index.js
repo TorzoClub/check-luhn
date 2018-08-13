@@ -1,22 +1,27 @@
-const bitSum = num => {
-  num = String(num)
-  if (num.length > 1) {
-    return num.split('').reduce((a, b) => parseInt(a) + parseInt(b))
-  } else {
-    return parseInt(num)
+const num2arr = str => {
+  const arr = []
+  for (let i = 0; i < str.length; i++) {
+    arr[i] = parseInt(str[i])
   }
+  return arr
 }
 
-const isOdd = num => (num % 2) !== 0
-
-const bitCompute = (numArr, cursor = 0) => {
-  const val = parseInt(numArr[cursor])
-
-  if (cursor === numArr.length) {
-    return 0
-  } else {
-    return bitCompute(numArr, cursor + 1) + (isOdd(cursor) ? val : bitSum(val * 2))
+const allAdd = arr => {
+  let sum = 0
+  for (let i = 0; i < arr.length; i++) {
+    sum += parseInt(arr[i])
   }
+  return sum
+}
+
+const bitSum = num => (num < 10) ? num : allAdd(String(num))
+
+const bitCompute = (numArr, cursor) => {
+  let sum = 0
+  for (let i = 0; i < numArr.length; i++) {
+    sum += (i % 2) ? numArr[i] : bitSum(numArr[i] * 2)
+  }
+  return sum
 }
 
 // 取出最後一位作爲校驗碼，剩下都反轉
@@ -26,9 +31,9 @@ const luhnCheck = num => {
   if (typeof(num) !== 'string') {
     throw TypeError('Expected string input')
   } else {
-    num = num.split('')
+    num = num2arr(num)
     return 0 === ((
-      parseInt(num.pop()) + bitCompute(num.reverse())
+      num.pop() + bitCompute(num.reverse(), 0)
     ) % 10)
   }
 }
