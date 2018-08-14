@@ -6,7 +6,7 @@ const fastNum2ArrFnTemplate = strLength => {
     return `  str[${cursor}] * 1`
   })
 
-  // 因為一位是校驗碼，故捨去
+  // 因為最後一位是校驗碼，故捨去
   elements.pop()
 
   // 反轉
@@ -25,17 +25,34 @@ module.exports = class {
     }
   }
 
+  inRange() {
+    return false
+  }
+
+  updateInRage(length_list) {
+    const exp = length_list.map(l => {
+      return `(nl === ${l})`
+    }).join(' || ')
+
+    this.inRange = eval(`nl => ${exp}`)
+  }
+
   init(length_list) {
     if (!Array.isArray(length_list)) {
       throw TypeError('length_list is not Array')
     }
+
     this.clear()
+
     length_list.forEach(l => {
       this[l] = fastNum2ArrGenerator(l)
     })
+
+    this.updateInRage(length_list)
+
     return this
   }
-  
+
   clear() {
     Object.keys(this).forEach(key => {
       delete this[key]

@@ -3,26 +3,28 @@
 const FastToNumberArray = require('./fast_to_number_array')
 // fast_toNumberArray 配置
 const fast_toNumberArray = new FastToNumberArray([16, 17, 18, 19, 20])
+
+// 以便外部可以定制 fast_toNumberArray 的範圍
 luhnCheck.fast_toNumberArray = fast_toNumberArray
+
+// 將數字字符串捨去最後一位后轉為數字數組并反轉
+const normalToNumberArray = num => {
+  const arr = []
+  for (let i = num.length - 2; i >= 0; i--) {
+    // num[i] * 1 等效于 parseInt(num[i] * 1)
+    arr.push(num[i] * 1)
+  }
+  return arr
+}
 
 // 用來識別 fast_toNumberArray 中是否存在加速函數，如果存在則調用它
 // 不存在則調用普通的 toNumberArray
-function toNumberArray(num) {
-  if (fast_toNumberArray.hasOwnProperty(num.length)) {
+const toNumberArray = num => {
+  if (fast_toNumberArray.inRange(num.length)) {
     return fast_toNumberArray[num.length](num)
   } else {
     return normalToNumberArray(num)
   }
-}
-
-// 將數字字符串捨去最後一位后轉為數字數組（並且是數字字符串的反轉數組）
-const normalToNumberArray = num => {
-  // 沒有就正常操作
-  const arr = []
-  for (let i = num.length - 2; i >= 0; i--) {
-    arr.push(parseInt(num[i]))
-  }
-  return arr
 }
 
 // 因為 evenBitSum 的關係，此時 num 肯定是 2 位的，也就是大於等於 10
@@ -32,7 +34,13 @@ const allAdd = num => 1 + (num % 10)
 
 // 如果相乘后的值小於 10 的話，則直接返回值。否則要執行個位數和十位數的相加
 // `(num < 5)` 即 `((num * 2) < 10)`
-const evenBitSum = num => (num < 5) ? (num * 2) : allAdd(num * 2)
+const evenBitSum = num => {
+  if (num < 5) {
+    return num * 2
+  } else {
+    return allAdd(num * 2)
+  }
+}
 
 // 按位相加
 const bitCompute = numArr => {
