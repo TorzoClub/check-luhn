@@ -22,17 +22,37 @@ check(incorrect_card) // false
 
 ```
 
-# Performance
-
-**> 3,400,000** ops/sec in Intel Core i5-4460 (Windows 7 Professinal 64bit, Node v8.11.3)
+# Command line
 
 ```
-C:\Users\vec\Desktop\check-luhn>npm run benchmark
+G:\my-pkg\check-luhn>check-luhn 6225365271562822
+true
 
-> check-luhn@0.2.5 benchmark C:\Users\vec\Desktop\check-luhn
-> node ./benchmark.js
+G:\my-pkg\check-luhn>check-luhn 6225365271562999
+false
 
-check-luhn#CorrectCard x 3,515,237 ops/sec ±0.31% (92 runs sampled)
-check-luhn#IncorrectCard x 3,467,781 ops/sec ±0.16% (95 runs sampled)
-Fastest is check-luhn#CorrectCard
+G:\my-pkg\check-luhn>check-luhn 6225365271562822 6225365271562822 6225365271562822
+true
+
+G:\my-pkg\check-luhn>check-luhn 6225365271562822 6225365271562822 6225369999999999
+false
+```
+
+# Performance
+
+**> 5,400,000** ops/sec in Intel Core i5-4460 (Windows 7 64bit, Node v8.11.3 64bit)
+<br>
+**> 14,900,000** ops/sec using `fast_toNumberArray` in Intel Core i5-4460 (Windows 7 64bit, Node v8.11.3 64bit)
+
+```
+C:\Users\vec\Desktop\check-luhn>node benchmark.js
+check-luhn#CorrectCard x 5,475,450 ops/sec ±0.13% (97 runs sampled)
+check-luhn#IncorrectCard x 5,655,244 ops/sec ±0.35% (96 runs sampled)
+
+Fastest is check-luhn#IncorrectCard
+
+check-luhn#CorrectCard with fast_toNumberArray x 14,943,990 ops/sec ±0.33% (92 runs sampled)
+check-luhn#IncorrectCard with fast_toNumberArray x 14,949,358 ops/sec ±0.11% (94 runs sampled)
+
+Fastest is check-luhn#IncorrectCard with fast_toNumberArray
 ```
