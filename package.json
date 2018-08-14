@@ -1,8 +1,11 @@
 {
   "name": "check-luhn",
-  "version": "0.2.7",
+  "version": "0.3.0",
   "description": "bank card number luhn check",
   "main": "index.js",
+  "bin": {
+    "check-luhn": "./bin/index.js"
+  },
   "scripts": {
     "test": "ava ./test --verbose",
     "test-watch": "ava ./test --watch",
@@ -22,5 +25,8 @@
     "ava": "^0.25.0",
     "benchmark": "^2.1.4",
     "chalk": "^2.4.1"
+  },
+  "dependencies": {
+    "commander": "^2.17.1"
   }
 }
