@@ -1,5 +1,5 @@
 import test from 'ava'
-import check from '../index'
+import check from '../'
 
 test('输入必须是字符串类型', t => {
   [6225365271562822, 1.1, null, undefined, {}, [], NaN, Infinity].forEach(value => {
